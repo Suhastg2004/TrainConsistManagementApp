@@ -1,78 +1,45 @@
-//author @ Suhas T G
-//version 2.0
+// author @ Suhas T G
+// version 4.0
 
 package com.trainconsistmanagementapp;
 
-import java.util.*; 
+import java.util.*;
 
 public class Main {
-	public static void main(String[] args) {
-	
-		// UC1
-	    System.out.println("===================================================");
-	    System.out.println(" === Train Consist Management App === ");
-	    System.out.println("===================================================\n");
+    public static void main(String[] args) {
 
-	    // Create a dynamic list to store train bogies
-	    List<String> trainConsist = new ArrayList<>();
-		
-	    // Display initial consist information
-	    System.out.println("Train initialized successfully...");
-	    System.out.println("Initial Bogie Count : " + trainConsist.size());
-	    System.out.println("Current Train Consist : " + trainConsist);
-	    System.out.println("\nSystem ready for operations...");
-	    
-	    // UC2
-	    // Banner
-         System.out.println("===================================================");
-         System.out.println("UC2 - Add Passenger Bogies to Train");
-         System.out.println("===================================================\n");
+        // ========================= UC4 =========================
+        System.out.println("===================================================");
+        System.out.println("UC4 - Maintain Ordered Bogie Consist");
+        System.out.println("===================================================\n");
 
-         // Create an ArrayList to hold passenger bogies
-         List<String> passengerBogies = new ArrayList<>();
+        // Create a LinkedList
+        // LinkedList maintains insertion order and allows fast inserts/removals
+        LinkedList<String> orderedConsist = new LinkedList<>();
 
+        // Build initial train sequence (head .. tail)
+        orderedConsist.addLast("Engine");
+        orderedConsist.addLast("Sleeper");
+        orderedConsist.addLast("AC");
+        orderedConsist.addLast("Cargo");
+        orderedConsist.addLast("Guard");
 
-         // add() attaches a new bogie to the train
-         passengerBogies.add("Sleeper");
-         passengerBogies.add("AC Chair");
-         passengerBogies.add("First Class");
+        System.out.println("Initial Train Consist:");
+        System.out.println(orderedConsist + "\n");
 
-         System.out.println("After Adding Bogies:");
-         System.out.println("Passenger Bogies : " + passengerBogies + "\n");
+        // Insert "Pantry Car" at position 2 (0-based: Engine=0, Sleeper=1)
+        orderedConsist.add(2, "Pantry Car");
 
-         // remove(Object) removes the first matching element if present
-         System.out.println("After Removing 'AC Chair':");
-         passengerBogies.remove("AC Chair");
-         System.out.println("Passenger Bogies : " + passengerBogies + "\n");
+        System.out.println("After Inserting 'Pantry Car' at position 2:");
+        System.out.println(orderedConsist + "\n");
 
-         // contains() returns true if the element exists in the list
-         System.out.println("Checking if 'Sleeper' exists:");
-         System.out.println("Contains Sleeper? : " + passengerBogies.contains("Sleeper") + "\n");
+        // Remove from head and tail
+        orderedConsist.removeFirst(); // remove Engine
+        orderedConsist.removeLast();  // remove Guard
 
-         System.out.println("Final Train Passenger Consist:");
-         System.out.println(passengerBogies + "\n");
-         
+        System.out.println("After Removing First and Last Bogie:");
+        System.out.println(orderedConsist + "\n");
 
-         System.out.println("===================================================");
-         System.out.println("UC3 - Track Unique Bogie IDs");
-         System.out.println("===================================================\n");
-
-         // HashSet stores only unique values (duplicates are ignored)
-         Set<String> bogies = new HashSet<>();
-
-         // add() inserts bogie IDs; duplicates will be ignored
-         bogies.add("BG101");
-         bogies.add("BG102");
-         bogies.add("BG103");
-         bogies.add("BG101"); // Duplicate entry
-         bogies.add("BG102"); // Duplicate entry
-         bogies.add("BG104");
-
-         System.out.println("Bogie IDs After Insertion:");
-         System.out.println(bogies + "\n");
-
-         System.out.println("Note:");
-         System.out.println("Duplicates are automatically ignored by HashSet.\n");
-
-	}
+        System.out.println("UC4 ordered consist operations completed...");
+    }
 }
