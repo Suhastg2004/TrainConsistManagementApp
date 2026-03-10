@@ -5,7 +5,7 @@ package com.trainconsistmanagementapp;
 
 import java.util.*; 
 
-public class UseCaseOneTrainConsistManagementApp {
+public class Main {
 	public static void main(String[] args) {
 		
 		//			-- UC1--
