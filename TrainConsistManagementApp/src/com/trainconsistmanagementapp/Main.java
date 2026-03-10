@@ -51,5 +51,28 @@ public class Main {
 
          System.out.println("Final Train Passenger Consist:");
          System.out.println(passengerBogies + "\n");
+         
+
+         System.out.println("===================================================");
+         System.out.println("UC3 - Track Unique Bogie IDs");
+         System.out.println("===================================================\n");
+
+         // HashSet stores only unique values (duplicates are ignored)
+         Set<String> bogies = new HashSet<>();
+
+         // add() inserts bogie IDs; duplicates will be ignored
+         bogies.add("BG101");
+         bogies.add("BG102");
+         bogies.add("BG103");
+         bogies.add("BG101"); // Duplicate entry
+         bogies.add("BG102"); // Duplicate entry
+         bogies.add("BG104");
+
+         System.out.println("Bogie IDs After Insertion:");
+         System.out.println(bogies + "\n");
+
+         System.out.println("Note:");
+         System.out.println("Duplicates are automatically ignored by HashSet.\n");
+
 	}
 }
