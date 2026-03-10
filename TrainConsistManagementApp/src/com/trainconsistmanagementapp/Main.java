@@ -1,9 +1,5 @@
 //author @ Suhas T G
-<<<<<<< HEAD
-//version 1.0
-=======
 //version 2.0
->>>>>>> feature/UC2-AddPassengerBogie
 
 package com.trainconsistmanagementapp;
 
@@ -11,13 +7,8 @@ import java.util.*;
 
 public class Main {
 	public static void main(String[] args) {
-<<<<<<< HEAD
-		
-		//			-- UC1--
-=======
 	
 		// UC1
->>>>>>> feature/UC2-AddPassengerBogie
 	    System.out.println("===================================================");
 	    System.out.println(" === Train Consist Management App === ");
 	    System.out.println("===================================================\n");
@@ -30,9 +21,6 @@ public class Main {
 	    System.out.println("Initial Bogie Count : " + trainConsist.size());
 	    System.out.println("Current Train Consist : " + trainConsist);
 	    System.out.println("\nSystem ready for operations...");
-<<<<<<< HEAD
-
-=======
 	    
 	    // UC2
 	    // Banner
@@ -63,6 +51,5 @@ public class Main {
 
          System.out.println("Final Train Passenger Consist:");
          System.out.println(passengerBogies + "\n");
->>>>>>> feature/UC2-AddPassengerBogie
 	}
 }
