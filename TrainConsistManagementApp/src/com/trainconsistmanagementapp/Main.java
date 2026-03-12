@@ -1,57 +1,80 @@
 // author @ Suhas T G
-// version 13
+// version 14
 
 package com.trainconsistmanagementapp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+// Custom checked exception
+class InvalidCapacityException extends Exception {
+    public InvalidCapacityException(String message) {
+        super(message);
+    }
+}
 
 public class Main {
 
-    // minimal model
-    static class Bogie {
-        final int capacity;
-        Bogie(int capacity) { this.capacity = capacity; }
-        int getCapacity() { return capacity; }
+    static class PassengerBogie {
+        private String name;
+        private int capacity;
+
+        // Constructor enforces fail-fast validation
+        public PassengerBogie(String name, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) {
+                throw new InvalidCapacityException(
+                    "Invalid capacity for bogie '" + name + "': " + capacity + ". Capacity must be > 0."
+                );
+            }
+            this.name = name;
+            this.capacity = capacity;
+        }
+
+        @Override
+        public String toString() {
+            return name + " -> " + capacity;
+        }
     }
 
     public static void main(String[] args) {
-        System.out.println("===================================================");
-        System.out.println("UC13 - Performance Comparison (Loops vs Streams)");
-        System.out.println("===================================================\n");
+        System.out.println("==============================================");
+        System.out.println("UC14 - Handle Invalid Bogie Capacity (Custom Exception)");
+        System.out.println("==============================================");
 
-        final int SIZE = 200_000;   // adjust if you want faster/slower runs
-        final int THRESHOLD = 60;
+        List<PassengerBogie> trainConsist = new ArrayList<>();
 
-        // simple dataset
-        List<Bogie> bogies = new ArrayList<>(SIZE);
-        for (int i = 0; i < SIZE; i++) {
-            // capacities cycle through 40..99
-            bogies.add(new Bogie(40 + (i % 60)));
+        // Try creating bogies (both valid and invalid)
+        try {
+            trainConsist.add(new PassengerBogie("Sleeper", 72));
+            System.out.println("Added: Sleeper");
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // ---- Loop timing ----
-        long startLoop = System.nanoTime();
-        List<Bogie> loopFiltered = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.getCapacity() > THRESHOLD) {
-                loopFiltered.add(b);
-            }
+        try {
+            trainConsist.add(new PassengerBogie("AC Chair", 0)); // invalid
+            System.out.println("Added: AC Chair");
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
-        long loopElapsed = System.nanoTime() - startLoop;
 
-        // ---- Stream timing ----
-        long startStream = System.nanoTime();
-        List<Bogie> streamFiltered = bogies.stream()
-                                           .filter(b -> b.getCapacity() > THRESHOLD)
-                                           .collect(Collectors.toList());
-        long streamElapsed = System.nanoTime() - startStream;
+        try {
+            trainConsist.add(new PassengerBogie("First Class", -10)); // invalid
+            System.out.println("Added: First Class");
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
-        // ---- Output (matches your desired format) ----
-        System.out.println("Loop Execution Time (ns): " + loopElapsed);
-        System.out.println("Stream Execution Time (ns): " + streamElapsed);
-        System.out.println();
-        System.out.println("UC13 performance benchmarking completed...");
+        try {
+            trainConsist.add(new PassengerBogie("Second Sitting", 108));
+            System.out.println("Added: Second Sitting");
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        System.out.println("\nFinal Valid Train Consist:");
+        trainConsist.forEach(System.out::println);
+
+        System.out.println("\nUC14 validation completed...");
     }
 }
