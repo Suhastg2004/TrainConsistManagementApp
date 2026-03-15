@@ -1,57 +1,66 @@
 // author @ Suhas T G
-// version 13
+// version 15
 
 package com.trainconsistmanagementapp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class Main {
 
-    // minimal model
-    static class Bogie {
-        final int capacity;
-        Bogie(int capacity) { this.capacity = capacity; }
-        int getCapacity() { return capacity; }
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) { super(message); }
+    }
+
+    // ---- Goods Bogie model ----
+    static class GoodsBogie {
+        private final String shape; // e.g., Cylindrical, Rectangular
+        private String cargo;       // e.g., Petroleum, Coal, Grain
+
+        GoodsBogie(String shape) { this.shape = shape; }
+
+        public String getShape() { return shape; }
+        public String getCargo() { return cargo; }
+
+        void assignCargo(String cargo) {
+            if ("Cylindrical".equalsIgnoreCase(shape)) {
+                if (!"Petroleum".equalsIgnoreCase(cargo)) {
+                    throw new CargoSafetyException("Cylindrical bogie can carry only Petroleum.");
+                }
+            } else if ("Rectangular".equalsIgnoreCase(shape)) {
+                if ("Petroleum".equalsIgnoreCase(cargo)) {
+                    throw new CargoSafetyException("Rectangular bogie cannot carry Petroleum.");
+                }
+            }
+            this.cargo = cargo; // assignment happens only if rules pass
+        }
     }
 
     public static void main(String[] args) {
+
         System.out.println("===================================================");
-        System.out.println("UC13 - Performance Comparison (Loops vs Streams)");
+        System.out.println("UC15 - Safe Cargo Assignment");
         System.out.println("===================================================\n");
 
-        final int SIZE = 200_000;   // adjust if you want faster/slower runs
-        final int THRESHOLD = 60;
-
-        // simple dataset
-        List<Bogie> bogies = new ArrayList<>(SIZE);
-        for (int i = 0; i < SIZE; i++) {
-            // capacities cycle through 40..99
-            bogies.add(new Bogie(40 + (i % 60)));
+        // ---- Case 1: Valid assignment (Cylindrical -> Petroleum) ----
+        GoodsBogie cylindrical = new GoodsBogie("Cylindrical");
+        try {
+            cylindrical.assignCargo("Petroleum"); // valid
+            System.out.println("Cargo assigned successfully -> " + cylindrical.getCargo());
+        } catch (CargoSafetyException ex) {
+            System.out.println("Error: Unsafe cargo assignment!");
+        } finally {
+            System.out.println("Cargo validation completed for " + cylindrical.getShape() + " bogie\n");
         }
 
-        // ---- Loop timing ----
-        long startLoop = System.nanoTime();
-        List<Bogie> loopFiltered = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.getCapacity() > THRESHOLD) {
-                loopFiltered.add(b);
-            }
+        // ---- Case 2: Invalid assignment (Rectangular -> Petroleum) ----
+        GoodsBogie rectangular = new GoodsBogie("Rectangular");
+        try {
+            rectangular.assignCargo("Petroleum"); // invalid to trigger the error
+            System.out.println("Cargo assigned successfully -> " + rectangular.getCargo());
+        } catch (CargoSafetyException ex) {
+            System.out.println("Error: Unsafe cargo assignment!");
+        } finally {
+            System.out.println("Cargo validation completed for " + rectangular.getShape() + " bogie\n");
         }
-        long loopElapsed = System.nanoTime() - startLoop;
 
-        // ---- Stream timing ----
-        long startStream = System.nanoTime();
-        List<Bogie> streamFiltered = bogies.stream()
-                                           .filter(b -> b.getCapacity() > THRESHOLD)
-                                           .collect(Collectors.toList());
-        long streamElapsed = System.nanoTime() - startStream;
-
-        // ---- Output (matches your desired format) ----
-        System.out.println("Loop Execution Time (ns): " + loopElapsed);
-        System.out.println("Stream Execution Time (ns): " + streamElapsed);
-        System.out.println();
-        System.out.println("UC13 performance benchmarking completed...");
+        System.out.println("UC15 runtime handling completed...");
     }
 }
