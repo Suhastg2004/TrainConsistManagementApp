@@ -1,66 +1,53 @@
 // author @ Suhas T G
-// version 15
+// version 16
 
 package com.trainconsistmanagementapp;
 
 public class Main {
+    public static void main(String[] args) {
+        System.out.println("==========================================================");
+        System.out.println("UC16 - Sort Passenger Bogies by Capacity (Bubble Sort)");
+        System.out.println("==========================================================");
 
-    static class CargoSafetyException extends RuntimeException {
-        public CargoSafetyException(String message) { super(message); }
-    }
+        // Passenger bogie capacities (unsorted)
+        int[] capacities = {72, 24, 56, 108, 48, 80};
 
-    // ---- Goods Bogie model ----
-    static class GoodsBogie {
-        private final String shape; // e.g., Cylindrical, Rectangular
-        private String cargo;       // e.g., Petroleum, Coal, Grain
+        System.out.print("\nBefore Sorting: ");
+        printArray(capacities);
 
-        GoodsBogie(String shape) { this.shape = shape; }
+        // Bubble Sort (ascending)
+        int n = capacities.length;
+        for (int i = 0; i < n - 1; i++) {
+            boolean swapped = false;
 
-        public String getShape() { return shape; }
-        public String getCargo() { return cargo; }
-
-        void assignCargo(String cargo) {
-            if ("Cylindrical".equalsIgnoreCase(shape)) {
-                if (!"Petroleum".equalsIgnoreCase(cargo)) {
-                    throw new CargoSafetyException("Cylindrical bogie can carry only Petroleum.");
-                }
-            } else if ("Rectangular".equalsIgnoreCase(shape)) {
-                if ("Petroleum".equalsIgnoreCase(cargo)) {
-                    throw new CargoSafetyException("Rectangular bogie cannot carry Petroleum.");
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (capacities[j] > capacities[j + 1]) {
+                    // swap adjacent elements
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+                    swapped = true;
                 }
             }
-            this.cargo = cargo; // assignment happens only if rules pass
+
+            // optimization: stop early if already sorted
+            if (!swapped) {
+                break;
+            }
         }
+
+        System.out.print("After Sorting : ");
+        printArray(capacities);
+
+        System.out.println("\nUC16 bubble sort completed successfully...");
     }
 
-    public static void main(String[] args) {
-
-        System.out.println("===================================================");
-        System.out.println("UC15 - Safe Cargo Assignment");
-        System.out.println("===================================================\n");
-
-        // ---- Case 1: Valid assignment (Cylindrical -> Petroleum) ----
-        GoodsBogie cylindrical = new GoodsBogie("Cylindrical");
-        try {
-            cylindrical.assignCargo("Petroleum"); // valid
-            System.out.println("Cargo assigned successfully -> " + cylindrical.getCargo());
-        } catch (CargoSafetyException ex) {
-            System.out.println("Error: Unsafe cargo assignment!");
-        } finally {
-            System.out.println("Cargo validation completed for " + cylindrical.getShape() + " bogie\n");
+    private static void printArray(int[] arr) {
+        System.out.print("[");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]);
+            if (i < arr.length - 1) System.out.print(", ");
         }
-
-        // ---- Case 2: Invalid assignment (Rectangular -> Petroleum) ----
-        GoodsBogie rectangular = new GoodsBogie("Rectangular");
-        try {
-            rectangular.assignCargo("Petroleum"); // invalid to trigger the error
-            System.out.println("Cargo assigned successfully -> " + rectangular.getCargo());
-        } catch (CargoSafetyException ex) {
-            System.out.println("Error: Unsafe cargo assignment!");
-        } finally {
-            System.out.println("Cargo validation completed for " + rectangular.getShape() + " bogie\n");
-        }
-
-        System.out.println("UC15 runtime handling completed...");
+        System.out.println("]");
     }
 }
