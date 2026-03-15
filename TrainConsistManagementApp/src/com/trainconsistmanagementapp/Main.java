@@ -1,50 +1,51 @@
 // author @ Suhas T G
-// version 18
+// version 19
 
 package com.trainconsistmanagementapp;
-
-
 import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("==============================================");
-        System.out.println("UC18 - Linear Search for Bogie ID");
+        System.out.println("UC19 - Binary Search for Bogie ID");
         System.out.println("==============================================");
 
-        // Unsorted bogie IDs
-        String[] bogieIds = {"BG104", "BG101", "BG109", "BG102", "BG107"};
+        // Sorted bogie IDs (precondition for binary search)
+        String[] bogieIds = {"BG101", "BG102", "BG104", "BG107", "BG109", "BG115", "BG120"};
 
-        // Search key (you can change this value)
-        String searchKey = "BG102";
+        // Optional safety sort (keeps code robust if input changes)
+        Arrays.sort(bogieIds);
 
-        boolean found = false;
+        String searchKey = "BG107";
+
+        int low = 0;
+        int high = bogieIds.length - 1;
         int foundIndex = -1;
 
-        // Linear Search
-        for (int i = 0; i < bogieIds.length; i++) {
-            if (bogieIds[i].equals(searchKey)) {
-                found = true;
-                foundIndex = i;
-                break; // Early termination
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            int cmp = searchKey.compareTo(bogieIds[mid]);
+
+            if (cmp == 0) {
+                foundIndex = mid;   // Found
+                break;
+            } else if (cmp > 0) {
+                low = mid + 1;      // Search right half
+            } else {
+                high = mid - 1;     // Search left half
             }
         }
 
-        System.out.print("\nBogie IDs: [");
-        for (int i = 0; i < bogieIds.length; i++) {
-            System.out.print(bogieIds[i]);
-            if (i < bogieIds.length - 1) System.out.print(", ");
-        }
-        System.out.println("]");
-
+        System.out.println("\nSorted Bogie IDs: " + Arrays.toString(bogieIds));
         System.out.println("Search Key: " + searchKey);
 
-        if (found) {
+        if (foundIndex != -1) {
             System.out.println("Result: Bogie ID found at index " + foundIndex + ".");
         } else {
             System.out.println("Result: Bogie ID not found.");
         }
 
-        System.out.println("\nUC18 linear search completed successfully...");
+        System.out.println("\nUC19 binary search completed successfully...");
     }
 }
